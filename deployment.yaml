@@ -1,0 +1,39 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: upg-loadme-app
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: upg-loadme-app
+  template:
+    metadata:
+      name: upg-loadme-app
+      labels:
+        app: upg-loadme-app
+    spec:
+      containers:
+        - name: upg-loadme-app
+          image: 449053275539.dkr.ecr.us-east-1.amazonaws.com/capstone:latest
+          resources:
+            requests:
+              cpu: ".2"
+              memory: "256Mi"
+            limits:
+              cpu: "2"
+              memory: "2Gi"
+      tolerations:
+        - key: type
+          value: nodeapp
+          operator: Equal
+          effect: NoSchedule
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: app
+                operator: In
+                values:
+                - capstone
